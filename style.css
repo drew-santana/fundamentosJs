@@ -10,7 +10,7 @@
     /* border: 2px solid red; */
     
     display: grid;
-    grid-template: 20% 60% 20% / 1fr;
+    grid-template: 20% 70% auto / 1fr;
     grid-template-areas: "header"
                          "hero"
                          "footer";   
@@ -29,10 +29,23 @@
 }
 .hero  {
     grid-area: hero;
+    padding: 1em;
     /* border: 2px blue solid; */
     display: flex;
+    flex-direction: column;
+}
+.hero .temario {
+    margin: 1em 0 0 2em;
+
+    
+    
+    
 }
 .footer{
     grid-area: footer;
+    background: #1a1a1ad2;
     /* border: 2px blue solid; */
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
