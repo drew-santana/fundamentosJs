@@ -22,6 +22,7 @@ Ahora estamos listos para utilizar el método de jQuery que nos permite hacer un 
 $.get(parametro1,parametro2,parametro3)
 ```
 **.get** requeire tres parametros que explicaré en orden.
+****
 
 - **Parámetro#1** : Este deberá llevar la URL del API, en nombre de la tabla de datos(en este caso **people/**), y  el **id** del objeto que queremos traer. cómo todo esto ocuparía almenos dos lineas de codigo y aún así sería poco legible, lo que haremos será separarlos en constantes
 
@@ -36,5 +37,77 @@ Para este ejemplo utilizaremos la API https://swapi.co
 ```
 const TABLE_URL = 'people/:id'
 ```
+ahora podemos juntar estos dos URL en una sola constante 
 
-Dentro del 
+
+```
+var id = 1
+const peopleURL = `${API_URL}${TABLE_URL.replace(':id', id)}`
+```
+****
+**.replace** : reemplaza una parte de un string por otra 
+****
+
+- **Parámetro#2** : será la configuración de dominio de neustro reguest, en este caso indicaremos que es un API externa y que vamos a  cruzar nuestro dominio con el de SWAPI
+
+
+```
+const Dominio = { crossDomain: true }
+```
+
+- **Parametro#3** : será la función/callback que se ejecutará en algún momento despues de que el reguest sea exitoso
+
+
+```
+const onPeopleResponse = function(data){
+ console.log(`Hola, soy ${data.name}`
+}
+```
+**¿QUÉ ES data ?**
+Resulta que un reguest trae varias cosas dentro de el, para saberlo podemos hacer un console.log de los argumentos que este tiene
+
+
+```
+const onPeopleResponse = function(data){
+ console.log(arguments)
+}
+```
+****
+****
+ **POR FIN** estamos listos para invocar nuestro reguest !
+
+
+```
+$.get(peopleURL,Dominio,onPeopleResponse)
+```
+Al ejecutar el reguest vamos a recibir los argumentos de este, son tres
+pero el primero es el que nos interesa, la **data**. 
+
+![arguments.PNG](https://static.platzi.com/media/user_upload/arguments-28947672-b3da-4c0e-b938-b3982341a865.jpg)
+Ahora sabemos cuales son los argumentos del **objeto**, y sus **keys** o características 
+
+
+```
+const onPeopleResponse = function(data){
+ console.log(`Hola, soy ${data.name} y mido ${data.height} centimetros`)
+}
+```
+
+![height.PNG](https://static.platzi.com/media/user_upload/height-5225ad89-8c0a-4421-aeb6-569b87fe15bc.jpg)
+
+
+****
+**ENCAPSULAR reguest en una función**
+Vamos muy bien, ahora podemos hacer una función que funcione en base a que id nos de el usuario.
+para eso utilizaremos un prompt()
+
+
+```
+var id = prompt('¿Qué id quieres buscar?')
+
+function obtenerPersonaje(id){
+ const peopleURL = `${API_URL}${TABLE_URL.replace(':id', id)`
+
+ $.get(peopleURL,Dominio,onPeopleResponse)
+}
+```
