@@ -1,0 +1,40 @@
+**¡Hola amigas y amigos !**
+Sí tienes clara la función del **Event loop** y ya entiendes el asincronismo en JavaScript, entonces estás listo para enfentarte a los **reguest**, **callbacks** y **promesas**.
+
+**¿QUÉ ES un reguest ?**
+Es un pedido de información a determinada API, en donde se encuentran todos los datos ordenados, listo para ser utilizados.
+****
+**INSTALAR jQuery**
+Tenemos que insertar esta librería desde nuestro HTML, este deberá estar antes de nuestro script
+
+para hallár el script de inserción tenemos que ir a https://code.jquery.com y copiar el código de integración minificado 
+```
+<script
+  src="https://code.jquery.com/jquery-3.4.1.min.js"
+  integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
+  crossorigin="anonymous">
+</script>
+```
+Ahora estamos listos para utilizar el método de jQuery que nos permite hacer un reguest 
+
+
+```
+$.get(parametro1,parametro2,parametro3)
+```
+**.get** requeire tres parametros que explicaré en orden.
+
+- **Parámetro#1** : Este deberá llevar la URL del API, en nombre de la tabla de datos(en este caso **people/**), y  el **id** del objeto que queremos traer. cómo todo esto ocuparía almenos dos lineas de codigo y aún así sería poco legible, lo que haremos será separarlos en constantes
+
+
+```
+const API_URL = 'https://swapi.co/api/'
+```
+
+Para este ejemplo utilizaremos la API https://swapi.co 
+
+
+```
+const TABLE_URL = 'people/:id'
+```
+
+Dentro del 

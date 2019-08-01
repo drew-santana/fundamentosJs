@@ -1,6 +1,7 @@
 const API_URL = 'https://swapi.co/api/'
-const REFERENCE_URL = 'planets/3'
-const PeopleURL = `${API_URL}${REFERENCE_URL.replace('3',1)}` 
+const REFERENCE_URL = 'people/:id'
+var id = prompt('Qué id quieres ?')
+const PeopleURL = `${API_URL}${REFERENCE_URL.replace(':id',id)}` 
 const opts = {crossDomain: true}
 const onPeopleRespnse = function(data){
   console.log(`${data.name}`)
