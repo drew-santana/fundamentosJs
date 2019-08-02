@@ -3,18 +3,25 @@ const REFERENCE_URL = 'people/:id'
  
 const opts = {crossDomain: true}
 
-const onPeopleResponse = function(data){ 
-  console.log(`Hola, soy ${data.name} y mido ${data.height} centimetros`)
-}
-const onError = function(id){
-  console.log(`No se pudo obtener el persoaje#${id}`)
-}
+var id = 1
 
 
   function ObtenerPersonaje(id){
-  var id = prompt('Qué id quieres ?')
+  const onPeopleResponse = function(data){ 
+    console.log(`Hola, soy ${data.name} y mido ${data.height} centimetros`)
+  }
+  
+  function onError(id){ //función que se llamara en el catch
+    console.log(`sucedio un error al obtener el personaje ${id}`)
+}
   const PeopleURL = `${API_URL}${REFERENCE_URL.replace(':id',id)}`
   $.get(PeopleURL,opts,onPeopleResponse)
-  .fail(onError)
+  .fail(()=>{
+    console.log(`Ha ocurrido un ERROR al tratar de obtener personaje ${id}`)
+})
 }
+ObtenerPersonaje(2)
+ObtenerPersonaje(3)
+ObtenerPersonaje(4)
+ObtenerPersonaje(5)
 

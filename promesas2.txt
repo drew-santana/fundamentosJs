@@ -111,3 +111,33 @@ function obtenerPersonaje(id){
  $.get(peopleURL,Dominio,onPeopleResponse)
 }
 ```
+****
+![console1.PNG](https://static.platzi.com/media/user_upload/console1-e3bbf963-7bfc-490a-85eb-77ae98a4f0cf.jpg)
+
+
+Todo excelente hasata el momento ...pero
+**¿QUÉ PASA cuando ocurre un error ?**
+Si ocurre algo inesperado que no permita la ejecución del reguest la consola nos mostrará este feo mensaje
+![errorget.PNG](https://static.platzi.com/media/user_upload/errorget-772f9949-3028-4758-8ff6-83b64c0b0a3a.jpg)
+Lo bueno de todo esto esque podemos hacer nuestro propio mensaje de **ERROR**, y para esto utilizaremos **.fail()**
+****
+**.fail** : Requiere una función como parametro, este será ejecutada cuando algo no permita la ejecución del reguest
+****
+```
+function obtenerPersonaje(id){
+
+ const peopleURL = `${API_URL}${TABLE_URL.replace(':id', id)`
+
+ $.get(peopleURL,Dominio,onPeopleResponse)
+	.fail( ()=>{//arrow function
+	console.log(`No se ha podido obtener el personaje ${id}`)
+})
+}
+```
+seguirán saliendo los dos mensajes, pero ahora el usuario tendrá una idea más clara de lo que ha pasado.
+![errorget2.PNG](https://static.platzi.com/media/user_upload/errorget2-2efd69e4-fd58-49c2-8783-76521463c590.jpg)
+****
+**¡¡ Y POR FIN PROMESAS !!**
+Ahora si entenderás de una vez y por todas qué son las promesas y para qué funcionan.
+**¿QUÉ SON?**
+Son **valores prometidos**, qué al momento de declarar la función simplemente  ANHELAMOS tener para que nuestra función FUNCIONE !.
