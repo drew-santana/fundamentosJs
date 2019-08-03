@@ -1,0 +1,143 @@
+**¡Hola amigas y amigos !**
+Sí tienes clara la función del **Event loop** y ya entiendes el asincronismo en JavaScript, entonces estás listo para enfentarte a los **reguest**, **callbacks** y **promesas**.
+
+**¿QUÉ ES un reguest ?**
+Es un pedido de información a determinada API, en donde se encuentran todos los datos ordenados, listo para ser utilizados.
+****
+**INSTALAR jQuery**
+Tenemos que insertar esta librería desde nuestro HTML, este deberá estar antes de nuestro script
+
+para hallár el script de inserción tenemos que ir a https://code.jquery.com y copiar el código de integración minificado 
+```
+<script
+  src="https://code.jquery.com/jquery-3.4.1.min.js"
+  integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
+  crossorigin="anonymous">
+</script>
+```
+Ahora estamos listos para utilizar el método de jQuery que nos permite hacer un reguest 
+
+
+```
+$.get(parametro1,parametro2,parametro3)
+```
+**.get** requeire tres parametros que explicaré en orden.
+****
+
+- **Parámetro#1** : Este deberá llevar la URL del API, en nombre de la tabla de datos(en este caso **people/**), y  el **id** del objeto que queremos traer. cómo todo esto ocuparía almenos dos lineas de codigo y aún así sería poco legible, lo que haremos será separarlos en constantes
+
+
+```
+const API_URL = 'https://swapi.co/api/'
+```
+
+Para este ejemplo utilizaremos la API https://swapi.co 
+
+
+```
+const TABLE_URL = 'people/:id'
+```
+ahora podemos juntar estos dos URL en una sola constante 
+
+
+```
+var id = 1
+const peopleURL = `${API_URL}${TABLE_URL.replace(':id', id)}`
+```
+****
+**.replace** : reemplaza una parte de un string por otra 
+****
+
+- **Parámetro#2** : será la configuración de dominio de neustro reguest, en este caso indicaremos que es un API externa y que vamos a  cruzar nuestro dominio con el de SWAPI
+
+
+```
+const Dominio = { crossDomain: true }
+```
+
+- **Parametro#3** : será la función/callback que se ejecutará en algún momento despues de que el reguest sea exitoso
+
+
+```
+const onPeopleResponse = function(data){
+ console.log(`Hola, soy ${data.name}`
+}
+```
+**¿QUÉ ES data ?**
+Resulta que un reguest trae varias cosas dentro de el, para saberlo podemos hacer un console.log de los argumentos que este tiene
+
+
+```
+const onPeopleResponse = function(data){
+ console.log(arguments)
+}
+```
+****
+****
+ **POR FIN** estamos listos para invocar nuestro reguest !
+
+
+```
+$.get(peopleURL,Dominio,onPeopleResponse)
+```
+Al ejecutar el reguest vamos a recibir los argumentos de este, son tres
+pero el primero es el que nos interesa, la **data**. 
+
+![arguments.PNG](https://static.platzi.com/media/user_upload/arguments-28947672-b3da-4c0e-b938-b3982341a865.jpg)
+Ahora sabemos cuales son los argumentos del **objeto**, y sus **keys** o características 
+
+
+```
+const onPeopleResponse = function(data){
+ console.log(`Hola, soy ${data.name} y mido ${data.height} centimetros`)
+}
+```
+
+![height.PNG](https://static.platzi.com/media/user_upload/height-5225ad89-8c0a-4421-aeb6-569b87fe15bc.jpg)
+
+
+****
+**ENCAPSULAR reguest en una función**
+Vamos muy bien, ahora podemos hacer una función que funcione en base a que id nos de el usuario.
+para eso utilizaremos un prompt()
+
+
+```
+var id = prompt('¿Qué id quieres buscar?')
+
+function obtenerPersonaje(id){
+ const peopleURL = `${API_URL}${TABLE_URL.replace(':id', id)`
+
+ $.get(peopleURL,Dominio,onPeopleResponse)
+}
+```
+****
+![console1.PNG](https://static.platzi.com/media/user_upload/console1-e3bbf963-7bfc-490a-85eb-77ae98a4f0cf.jpg)
+
+
+Todo excelente hasata el momento ...pero
+**¿QUÉ PASA cuando ocurre un error ?**
+Si ocurre algo inesperado que no permita la ejecución del reguest la consola nos mostrará este feo mensaje
+![errorget.PNG](https://static.platzi.com/media/user_upload/errorget-772f9949-3028-4758-8ff6-83b64c0b0a3a.jpg)
+Lo bueno de todo esto esque podemos hacer nuestro propio mensaje de **ERROR**, y para esto utilizaremos **.fail()**
+****
+**.fail** : Requiere una función como parametro, este será ejecutada cuando algo no permita la ejecución del reguest
+****
+```
+function obtenerPersonaje(id){
+
+ const peopleURL = `${API_URL}${TABLE_URL.replace(':id', id)`
+
+ $.get(peopleURL,Dominio,onPeopleResponse)
+	.fail( ()=>{//arrow function
+	console.log(`No se ha podido obtener el personaje ${id}`)
+})
+}
+```
+seguirán saliendo los dos mensajes, pero ahora el usuario tendrá una idea más clara de lo que ha pasado.
+![errorget2.PNG](https://static.platzi.com/media/user_upload/errorget2-2efd69e4-fd58-49c2-8783-76521463c590.jpg)
+****
+**¡¡ Y POR FIN PROMESAS !!**
+Ahora si entenderás de una vez y por todas qué son las promesas y para qué funcionan.
+**¿QUÉ SON?**
+Son **valores prometidos**, qué al momento de declarar la función simplemente  ANHELAMOS tener para que nuestra función FUNCIONE !.

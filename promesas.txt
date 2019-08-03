@@ -1,0 +1,114 @@
+ir a https://jquery.com/ ir a descargas ir ver las CDN
+https://code.jquery.com/
+y descargar la versión minificada 
+luego copiar ese codigo antes del script donde se hará el llamado
+y listo ! ya tenemos jQuery
+ahora bien queremos acceder a los datos que están dentr de nuestra API, para poder manejarlos a nuestro antojo.
+para poder realizar este reguest lo que tenenmos que saber es que  siempre cual es la  es la url de la API
+
+esta la podemos guardar dentro de una constante
+const API_URL = 'https://swapi.co/api/'
+luego necesitamos guardar la tabla de tados que nos interesan, en este caso people
+const PEOPLE_URL= 'people/:id'
+el id es lo que indentificará a cada personaje es por eso que luego tendremos de aplicar un .replace() a esta constante para cambiar lod datos de personaje según el id del mismo.
+ahora que ya tenemos estas constantes definidas crearemos el reguest y jQuery nos permite hacer esto con 
+$.get( , , )
+un reguest tiene tres parametros :
+1. URL de la API ,URL de la referencia y id del dato: este parametro es largo por lo que se recomienda guardarlo en una variable, para que así sólo se altere el id
+ var Personaje1 = '${API_URL}${PEOPLE_URL.replace(':id',1) }
+2. luego se le indica a jQuery que los datos vendrás de un lugar externo al documento
+para eso creamos este objeto de seguridad que permitirá crusar nuestro dominio con el de la API de una forma segura.
+
+{crossDomain:true}
+que tambien se puede guardar en una constante 
+const Fuente = {crossDomain:true}
+3.nuestro callback, es una fncion que se va ejecuitar en algun futuro y que no sabemos exactamente cuando va hacer.
+sólo cuando el reguest entero tenga exito es que el callback va a suceder pero eso no garantiza su ejecución inmediata, ya que entrará baso el control del event Loop.
+cómo sabemos que datos trae nuestro reguest ?
+para eso utilizaremos arguments
+lo podenos dentro de un console dentro del cuerpo de la función/callback a ejecutar y listo
+argument se convertira entonces es nuestra herramienta para saber los parametros dentro de cualquier función.
+
+entonces dentro de la función utilizaremos sólo el primer parametro
+function (data) {
+console.log(data.name)
+creamos la función y la guardamos en una constante
+const OnPeopleResponde = function(data){
+console.log(`hola, soy ${data.name}`)
+ahora sí podemos hacer el reguest completo
+$.get(personaje,opts,onPeopleResponde)
+
+y nuestro reguest está listo, pero que tal sí creamos una  funcion para obtener cualquier personaje a partir de su id
+function obtenerPersonaje(id){
+var url = '${API_URL}${PEOPLE_URL.replace(':id',id) 
+$.get(url,opts,onPeopleResponde)
+}
+QUÉ HA pasado aqui ?
+declaramos una variable que altener sólo el id de la url del personaje
+justo anteste de que nuesta funcion de ontener pueda terminar se agrega a la pila la función onPeopleResponse y esta nos dará el nombre del personaje.
+manejo de errorres
+el metodo .fail se ejecutará cada vez que el reguest no sea exitoso
+.fail(function(){
+consol.log('No se pudo obtener el personaje${id})
+}
+entonces ya tenemos un aviso para cuando se vaya el internet o por alguna otra razón el reguest no se peude ejecutar con exito.
+PROMESAS !!
+las promesas tienen tres estados
+pending: es el estado inicial de la promesa
+fulfilled:si la promesa se resuelve exitosamente
+rejected:si ocurre un error
+
+para obtener la respuesta a la promesa se utiliza
+.then(val =>)
+cuando sea exitosa y
+.catch(err =>)
+
+crear una promesa
+new Promise(functions(resolve,reject){})
+para obtener el valor que esperabamos 
+new Promise(functions(resolve,reject){
+}).then(valor =>{
+}).catch(err=>{})
+
+ahora la función que ejecute el reguest tiene que retornar una nueva promesa
+return new Promise (function(resolve,reject){
+var url
+$.get(url,opts,function(){
+resolve(data)
+})
+seguido a esto se invoca a la función resolve, como tercer parametro del get, recordemos que este parametro es la función a ejecutar sí la reguest es extiso
+la función de la promesa tiene dos parametros, estos son resolve  y reject que se ejecutarán de acuerdo a la respuesta de la promesa
+así como invocamos el resolve, tambien invacaremos el reject al .fail, pasandole como parametro el id del dato al que no se pudo acceder
+ .fail( ()=>reject(id) )
+ahora podemos crear la funcione que haga lo que queremos con los datos y la función de informe de error, por si el reguest nunca ocurre
+function onSuccess (data){
+console.log(`Hola, soy ${data.name}`)
+}
+function onError(id){
+console.log(`ERROR no se pudo obtener el personaje ${id}`)
+ahora lo unico que tenemos que hacer el invocar la función y pasar nuestras funciones de exito y error a  then y catch
+obtenerPersonaje(1)
+.then(onSuccess)
+.catch(onError)
+
+COMO ENCADENAR PROMESAS ?
+en el .then al final se retornara la misma funcion que invoca en reguest pero con el siguiente parametro 
+.then(function onSuccess (data){
+console.log(`Hola, soy ${data.name}`)
+return obtenerPesonaje(2)
+})
+así pues el siguiente .then será de obtenerPersonaje(2) y sucesibamente 
+
+MULTIPLES PROMESAS EN PARALELO
+primero guardamos en un array los id de los personajes que queremos
+ahora generamos un nuevo array apartir de esta para hacer que cada elemento se vuelta una nueva promesa
+var ids = [1,2,3,4,5]
+var promesas = ids.map(function(id){
+returb obtenerPesonaje(id)
+})
+
+
+
+
+
+
