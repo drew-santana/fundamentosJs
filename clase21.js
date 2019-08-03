@@ -1,6 +1,7 @@
 
 
 
+
 function jugador(nickname,score){
     this.nickname = nickname
     this.score = score
