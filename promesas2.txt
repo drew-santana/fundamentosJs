@@ -35,14 +35,14 @@ Para este ejemplo utilizaremos la API https://swapi.co
 
 
 ```
-const TABLE_URL = 'people/:id'
+const PEOPLE_URL = 'people/:id'
 ```
 ahora podemos juntar estos dos URL en una sola constante 
 
 
 ```
 var id = 1
-const peopleURL = `${API_URL}${TABLE_URL.replace(':id', id)}`
+const URL = `${API_URL}${TABLE_URL.replace(':id', id)}`
 ```
 ****
 **.replace** : reemplaza una parte de un string por otra 
@@ -52,7 +52,7 @@ const peopleURL = `${API_URL}${TABLE_URL.replace(':id', id)}`
 
 
 ```
-const Dominio = { crossDomain: true }
+const CONNECTION = { crossDomain: true }
 ```
 
 - **Parametro#3** : será la función/callback que se ejecutará en algún momento despues de que el reguest sea exitoso
@@ -78,7 +78,7 @@ const onPeopleResponse = function(data){
 
 
 ```
-$.get(peopleURL,Dominio,onPeopleResponse)
+$.get(URL,CONNECTION,onPeopleResponse)
 ```
 Al ejecutar el reguest vamos a recibir los argumentos de este, son tres
 pero el primero es el que nos interesa, la **data**. 
@@ -106,9 +106,9 @@ para eso utilizaremos un prompt()
 var id = prompt('¿Qué id quieres buscar?')
 
 function obtenerPersonaje(id){
- const peopleURL = `${API_URL}${TABLE_URL.replace(':id', id)`
+ const URL = `${API_URL}${PEOPLE_URL.replace(':id', id)`
 
- $.get(peopleURL,Dominio,onPeopleResponse)
+ $.get(URL,CONNECTION,onPeopleResponse)
 }
 ```
 ****
@@ -126,9 +126,9 @@ Lo bueno de todo esto esque podemos hacer nuestro propio mensaje de **ERROR**, y
 ```
 function obtenerPersonaje(id){
 
- const peopleURL = `${API_URL}${TABLE_URL.replace(':id', id)`
+ const URL = `${API_URL}${PEOPLE_URL.replace(':id', id)`
 
- $.get(peopleURL,Dominio,onPeopleResponse)
+ $.get(URL,CONNECTION,onPeopleResponse)
 	.fail( ()=>{//arrow function
 	console.log(`No se ha podido obtener el personaje ${id}`)
 })
@@ -137,7 +137,97 @@ function obtenerPersonaje(id){
 seguirán saliendo los dos mensajes, pero ahora el usuario tendrá una idea más clara de lo que ha pasado.
 ![errorget2.PNG](https://static.platzi.com/media/user_upload/errorget2-2efd69e4-fd58-49c2-8783-76521463c590.jpg)
 ****
-**¡¡ Y POR FIN PROMESAS !!**
+**¡¡ Y POR FIN LAS PROMESAS !!**
 Ahora si entenderás de una vez y por todas qué son las promesas y para qué funcionan.
 **¿QUÉ SON?**
-Son **valores prometidos**, qué al momento de declarar la función simplemente  ANHELAMOS tener para que nuestra función FUNCIONE !.
+Son **valores prometidos**, qué al momento de declarar la función simplemente  ANHELAMOS tener.
+Para **crear** una nueva promesa es necesario comenzar la función con un **return**, lo cual hará que al momento en que la función se invoque, primero se tenga encuenta a la promesa que estamos a punto de crear.
+
+
+```
+function ObtenerPersonaje(id){
+	return new Promise( )
+}
+```
+La promesa recibe como parámetro una función(en este caso una Arrow/function), que a su vez recibe el metodo resolve, y reject como parámetros.
+
+
+```
+function ObtenerPersonaje(id){
+return new Promesa( (resolve,reject) =>{
+	//CUERPO DE LA FUNCIÓN
+}
+```
+**¿QUÉ ES resolve y reject ?**
+Son las dos opciones de **resolución **de la promesa, para entender mejor esto, aprendamos los estados por los que puede pasar una promesa.
+
+- **Pending**: es el estado inicial de toda promesa
+
+- **Fulfilled** : una promesa pasa a este estado cuando se resuelve exitosamente 
+
+- **Rejected** : cuando ocurre algún error.
+
+teniendo esto claro, continuemos declarando nuestra función promesa...
+
+
+```
+function ObtenerPersonaje(id){
+return new Promesa( (resolve,reject) =>{
+	const URL = `${API_URL}${PEOPLE_URL.replace(':id', id)}`
+	$
+	.get(ULR,CONNECTION, function(data){
+	resolve(data)
+})
+.fail( ()=> reject(id) )
+}
+```
+**¿QUÉ HA pasado aquí ?**
+
+- Como tercer parametro de nuestro reguest vamos a declarar una función, la cual que va a tener como parámetro el dato que anhelamos tener, en este caso la DATA.
+Cuando esta función se ejecute, osea cuando nuestro **reguest** sea exitoso, se invocará el metodo **resolve**, enviandole el parametro que necesita **(data)**.
+
+
+- También declaramos una función (**Arrow**) que invoque al metodo **reject** pasandole como parámetro el id que no fue encontrado.
+De esta manera sabemos QUÉ hacer con la data antes de tenerla, ¿no es genial :D?
+****
+**PERO PERO PERO !**
+¿Qué harán exactamente **resolve** y **reject** con nuestra data ?
+Pues la verdad es que aún no lo hemos declarado, esto lo tenemos que hacer al momento en que la función _**ObtenerPersonaje()**_ se invoque. veamos cómo hacerlo
+
+
+```
+ObtenerPersonaje(id)
+.then()
+.catch()
+```
+con **.then()** y **.catch()** sabremos a qué estado paso nuestra promesa después de que el reguest se ejecute.
+
+**.then( función )** :  ejecutará la función que le asignemos cuando la promesa pase a **Fulfilled**
+**.catch( función )** : ejecutará la función que le asignemos cuando la promesa pase a **Rejected**
+
+Ahora bien, sabiendo que nuestro dato **prometido** es DATA, declaremos una función que obtenga el data.name y haga un bonito saludo, la llamaremos **onSuccess** y sera la función que irá como parámetro en el .then
+
+
+```
+function onSuccess (data){
+	console.log(`Hola, soy ${data.name}`)
+```
+Hagamos una para cuando algo raro ocurra !
+
+
+```
+
+function onError(id){
+console.log(`No se pudo obtener el personaje ${id}`)
+}
+```
+está función recibe el mismo **id** de reject(id), que  a su vez en el mismo **id**  que nos permite buscar un personaje en especifico.
+**AHORA SI ESTA TODO LISTO !**
+sólo nos falta llamar a las funciones que acabaos de crear como parametro dentro de .then y .catch
+
+
+```
+Obtenerersonaje(id)
+.then(onSuccess)
+.catch(onError)
+```
